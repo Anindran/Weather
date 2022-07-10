@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather report</title>
+    <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="./index.css">
+<script src="https://kit.fontawesome.com/2a4f6957f9.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="row ">
+        <div id="c1" class="col-lg-3">
+            <h4 id="head1">Weather Report</h4><br>
+            <form class="input-group" id="form">
+                <input type="text" placeholder="Location" class="form-control" id="cname" ><br>
+                <button id="src" class="btn btn-primary" type="button" onclick="search()"><i class="fa fa-search" ></i></button>
+            </form>
+            
+                <h6 id="head2" class="clr"><u>Weather Details</u></h6><br>
+                <div id="det1">
+                <div class="clr">Country</div><br>
+                <!-- <div id="country" class="clr">IN</div> -->
+                <div class="clr" >Humidity</div><br>
+                <!-- <div id="humidity" class="clr">87</div> -->
+                <div class="clr">Wind</div><br>
+                <!-- <div id="wind" class="clr"> 5.39</div> -->
+                <div class="clr">pressure</div><br>
+                <!-- <div id="pressure" class="clr">1011</div> -->
+            </div>
+
+        </div>
+        <div id="c2" class="col-lg-9">
+            <!-- <div id="cty">
+            <h1 id="city"></h1>
+            <div id="lat">Latitude:9.9399</div>
+            <div id="lon">Longitude:76.2602</div>
+        </div>
+        <div id="temp">
+            <h1 id="tp"> 25°C</h1>
+            <h3 id="desc">overcast clouds</h3>
+        </div> -->
+
+    </div>
+</body>
+<script>
+function search(){
+    city=cname.value
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=8ac5c4d57ba6a4b3dfcf622700447b1e`)
+    .then(result=>result.json()).then(data=>displayData(data)).catch(()=>failed())
+    //.then(data=>console.log(data.main.temp)) 
+    
+}
+function displayData(cityDetails){
+cName=cityDetails.name
+countryName=cityDetails.sys.country
+humidityValue=cityDetails.main.humidity
+windSpeed=cityDetails.wind.speed
+pressureValue=cityDetails.main.pressure
+lattitudeValue=cityDetails.coord.lat
+longitudeValue=cityDetails.coord.lon
+descriptionValue=cityDetails.weather[0].description
+tempValue=Math.floor(cityDetails.main.temp-273.15)
+
+
+    htmlData1=`
+                <div class="clr">Country</div>
+                <div id="country" class="clr">${countryName}</div>
+                <div class="clr" >Humidity</div>
+                <div id="humidity" class="clr">${humidityValue}</div>
+                <div class="clr">Wind</div>
+                <div id="wind" class="clr"> ${windSpeed}</div>
+                <div class="clr">pressure</div>
+                <div id="pressure" class="clr">${pressureValue}</div>
+`
+
+htmlData2=`
+<div id="cty">
+            <h1 id="city">${cName}</h1>
+            <div id="lat">Latitude:${lattitudeValue}</div>
+            <div id="lon">Longitude:${longitudeValue}</div>
+        </div>
+        <div id="temp">
+            <h1 id="tp"> ${tempValue}°C</h1>
+            <h3 id="desc">${descriptionValue}</h3>
+            
+        </div>
+`
+det1.innerHTML=htmlData1
+c2.innerHTML=htmlData2
+
+}
+
+function failed(){
+    alert("City not Found")
+}
+
+</script>
+</html>
